@@ -43,7 +43,7 @@
 
     .container{
       width:100%;
-      max-width:450px;
+      max-width:500px;
       background:white;
       color:#333;
       border-radius:20px;
@@ -61,7 +61,9 @@
       width:120px;
       height:120px;
       border-radius:50%;
-      object-fit:cover;
+      object-fit:contain;
+      background:#fff;
+      padding:5px;
       border:4px solid #00b4b4;
     }
 
@@ -105,7 +107,6 @@
 
     button:hover{
       background:#008c8c;
-      transform:scale(1.02);
     }
 
     .usuarios{
@@ -122,12 +123,28 @@
       background:#f2f2f2;
       padding:15px;
       border-radius:12px;
-      margin-bottom:10px;
+      margin-bottom:15px;
       border-left:5px solid #00b4b4;
     }
 
     .usuario-card p{
-      margin:5px 0;
+      margin:6px 0;
+    }
+
+    .btn-eliminar{
+      margin-top:10px;
+      background:#e53935;
+      padding:10px;
+      width:100%;
+      border:none;
+      border-radius:10px;
+      color:white;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .btn-eliminar:hover{
+      background:#c62828;
     }
 
     footer{
@@ -156,17 +173,19 @@
 
   <header>
     <h1>Registro de Usuario Pro</h1>
-    <p>Diseño Responsivo Profesional</p>
+    
   </header>
 
   <main>
 
     <section class="container">
 
+      <!-- FOTO -->
       <div class="perfil">
         <img src="perfil.png" alt="Foto de perfil">
       </div>
 
+      <!-- FORMULARIO -->
       <form id="registroForm">
 
         <div>
@@ -200,15 +219,19 @@
             required>
         </div>
 
+        <!-- FECHA -->
         <div>
-          <label for="fecha">Fecha de Nacimiento</label>
+          <label for="fechaNacimiento">
+            Fecha de Nacimiento
+          </label>
 
           <input
             type="date"
-            id="fecha"
+            id="fechaNacimiento"
             required>
         </div>
 
+        <!-- PAÍS -->
         <div>
           <label for="pais">País</label>
 
@@ -230,6 +253,7 @@
 
         </div>
 
+        <!-- COLOR -->
         <div>
           <label for="color">Color Favorito</label>
 
@@ -245,6 +269,7 @@
 
       </form>
 
+      <!-- USUARIOS -->
       <div class="usuarios">
 
         <h2>Usuarios Registrados</h2>
@@ -263,19 +288,21 @@
 
   <script>
 
-    const formulario = document.getElementById("registroForm");
-    const listaUsuarios = document.getElementById("listaUsuarios");
+    const formulario =
+    document.getElementById("registroForm");
 
-    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    const listaUsuarios =
+    document.getElementById("listaUsuarios");
+
+    let usuarios =
+    JSON.parse(localStorage.getItem("usuarios")) || [];
 
     mostrarUsuarios();
 
+    // REGISTRAR USUARIO
     formulario.addEventListener("submit", function(e){
 
       e.preventDefault();
-
-      const colorSeleccionado =
-      document.getElementById("color").value;
 
       const usuario = {
 
@@ -288,14 +315,14 @@
         password:
         document.getElementById("password").value,
 
-        fecha:
-        document.getElementById("fecha").value,
+        fechaNacimiento:
+        document.getElementById("fechaNacimiento").value,
 
         pais:
         document.getElementById("pais").value,
 
         color:
-        colorSeleccionado
+        document.getElementById("color").value
 
       };
 
@@ -317,11 +344,12 @@
 
     });
 
+    // MOSTRAR USUARIOS
     function mostrarUsuarios(){
 
       listaUsuarios.innerHTML = "";
 
-      usuarios.forEach((usuario) => {
+      usuarios.forEach((usuario, index) => {
 
         listaUsuarios.innerHTML += `
 
@@ -338,8 +366,8 @@
             </p>
 
             <p>
-              <strong>Fecha:</strong>
-              ${usuario.fecha}
+              <strong>Fecha de Nacimiento:</strong>
+              ${usuario.fechaNacimiento}
             </p>
 
             <p>
@@ -366,11 +394,40 @@
 
             </p>
 
+            <button
+              class="btn-eliminar"
+              onclick="eliminarUsuario(${index})">
+
+              Eliminar Registro
+
+            </button>
+
           </div>
 
         `;
 
       });
+
+    }
+
+    // ELIMINAR USUARIO
+    function eliminarUsuario(index){
+
+      const confirmar =
+      confirm("¿Deseas eliminar este registro?");
+
+      if(confirmar){
+
+        usuarios.splice(index, 1);
+
+        localStorage.setItem(
+          "usuarios",
+          JSON.stringify(usuarios)
+        );
+
+        mostrarUsuarios();
+
+      }
 
     }
 
