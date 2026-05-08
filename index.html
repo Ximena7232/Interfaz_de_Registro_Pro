@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro Pro</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      background:linear-gradient(135deg,#00b4b4,#007c7c);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      color:white;
+    }
+
+    header, footer{
+      text-align:center;
+      padding:20px;
+      background:rgba(0,0,0,0.15);
+    }
+
+    main{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .container{
+      background:white;
+      color:#333;
+      width:100%;
+      max-width:450px;
+      border-radius:20px;
+      padding:30px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .perfil{
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .perfil img{
+      width:120px;
+      height:120px;
+      border-radius:50%;
+      border:4px solid #00b4b4;
+    }
+
+    form{
+      display:flex;
+      flex-direction:column;
+      gap:15px;
+    }
+
+    input, button{
+      padding:12px;
+      border-radius:10px;
+      border:1px solid #ccc;
+      font-size:1rem;
+    }
+
+    button{
+      background:#00b4b4;
+      color:white;
+      border:none;
+      cursor:pointer;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    button:hover{
+      background:#008c8c;
+    }
+
+    .usuarios{
+      margin-top:25px;
+    }
+
+    .usuario-card{
+      background:#f2f2f2;
+      padding:10px;
+      border-radius:10px;
+      margin-bottom:10px;
+    }
+
+    @media(max-width:480px){
+      .container{
+        padding:20px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Registro de Usuario Pro</h1>
+</header>
+
+<main>
+  <section class="container">
+
+    <div class="perfil">
+      <img src="https://i.pravatar.cc/300" alt="perfil">
+    </div>
+
+    <form id="registroForm">
+
+      <input type="text" id="nombre" placeholder="Nombre completo" required>
+
+      <input type="email" id="email" placeholder="Correo electrónico" required>
+
+      <input 
+        type="password"
+        id="password"
+        placeholder="Contraseña mínimo 8 caracteres"
+        minlength="8"
+        required>
+
+      <input type="date" id="fecha" required>
+
+      <input list="paises" id="pais" placeholder="País" required>
+
+      <datalist id="paises">
+        <option value="México">
+        <option value="Argentina">
+        <option value="Colombia">
+        <option value="Chile">
+        <option value="España">
+        <option value="Perú">
+      </datalist>
+
+      <input type="color" id="color">
+
+      <button type="submit">Registrarse</button>
+
+    </form>
+
+    <div class="usuarios">
+      <h2>Usuarios Registrados</h2>
+      <div id="listaUsuarios"></div>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 Registro Pro</p>
+</footer>
+
+<script>
+
+const formulario = document.getElementById("registroForm");
+const listaUsuarios = document.getElementById("listaUsuarios");
+
+// Cargar usuarios guardados
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+mostrarUsuarios();
+
+formulario.addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const usuario = {
+    nombre: document.getElementById("nombre").value,
+    email: document.getElementById("email").value,
+    password: document.getElementById("password").value,
+    fecha: document.getElementById("fecha").value,
+    pais: document.getElementById("pais").value,
+    color: document.getElementById("color").value
+  };
+
+  usuarios.push(usuario);
+
+  // Guardar en localStorage
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+  mostrarUsuarios();
+
+  formulario.reset();
+
+  alert("Usuario registrado correctamente");
+});
+
+function mostrarUsuarios(){
+
+  listaUsuarios.innerHTML = "";
+
+  usuarios.forEach((usuario, index) => {
+
+    listaUsuarios.innerHTML += `
+      <div class="usuario-card">
+        <p><strong>Nombre:</strong> ${usuario.nombre}</p>
+        <p><strong>Email:</strong> ${usuario.email}</p>
+        <p><strong>Fecha:</strong> ${usuario.fecha}</p>
+        <p><strong>País:</strong> ${usuario.pais}</p>
+        <p>
+          <strong>Color:</strong> 
+          <span style="display:inline-block;
+          width:20px;
+          height:20px;
+          background:${usuario.color};
+          border-radius:50%;">
+          </span>
+        </p>
+      </div>
+    `;
+  });
+}
+
+</script>
+
+</body>
+</html>
